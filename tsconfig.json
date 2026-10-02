@@ -13,7 +13,11 @@
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "types": ["node"],
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "thai-address-api": ["./src/index.ts"],
+      "thai-address-api/server": ["./src/server/app.ts"]
+    }
   },
   "include": ["src", "test", "scripts", "examples/*.ts", "tsup.config.ts"]
 }
