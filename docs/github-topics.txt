@@ -1,0 +1,23 @@
+Description (paste into the repository "About" box):
+Thai address data and parser: 77 provinces, 928 districts, 7,436 sub-districts and postcodes. Typo-tolerant autocomplete, free-text address parsing, reverse geocoding. Offline npm library + HTTP API.
+
+Website:
+(the URL of your deployed demo, if any)
+
+Topics:
+thailand
+thai
+thai-address
+address-parser
+address-autocomplete
+postcode
+zipcode
+province
+amphoe
+tambon
+geocoding
+reverse-geocoding
+typescript
+hono
+cloudflare-workers
+openapi

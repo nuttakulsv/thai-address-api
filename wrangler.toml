@@ -1,0 +1,3 @@
+name = "thai-address-api"
+main = "src/server/worker.ts"
+compatibility_date = "2026-09-01"

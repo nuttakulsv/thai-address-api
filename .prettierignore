@@ -1,0 +1,6 @@
+dist
+node_modules
+coverage
+src/data/data.ts
+data/centroids.csv
+*.md

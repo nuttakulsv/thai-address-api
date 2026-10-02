@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Smoke test the CLI
+        run: |
+          node dist/cli.js parse "99/1 ม.4 ต.บางพลีใหญ่ อ.บางพลี จ.สมุทรปราการ 10540" | grep -q '"postcode": "10540"'
+
+  node20:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run the built package on Node 20
+        run: |
+          node dist/cli.js parse "99/1 ม.4 ต.บางพลีใหญ่ อ.บางพลี จ.สมุทรปราการ 10540" | grep -q '"postcode": "10540"'
+          node -e "const { search } = require('./dist/index.cjs'); if (!search('บางพลี').length) process.exit(1)"
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t thai-address-api .
+      - run: |
+          docker run -d -p 3000:3000 --name api thai-address-api
+          for i in $(seq 1 20); do curl -fs http://localhost:3000/health && exit 0; sleep 1; done
+          docker logs api
+          exit 1
